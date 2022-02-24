@@ -1,4 +1,5 @@
 import os
+import subprocess
 import re
 
 def getLinks(count, queue):
@@ -29,8 +30,8 @@ if __name__ == '__main__':
     while len(web_crawl) < 100:
         url = queue.pop(0) # Breadth first search of URLs
         command = 'wget  -q -O ./downloads/' + str(count+1) + '.html ' + url
-        run = os.system(command) # Make an attempt to download page
-        if run == 0:
+        run = subprocess.run(command, stdout=None, stderr=subprocess.DEVNULL) # Make an attempt to download page
+        if run.returncode == 0:
             if url.rstrip('/') not in web_crawl: web_crawl.append(url.rstrip('/')) # Append to list if no exception occurs
             queue = getLinks(count, queue) # Enqueue more links to be visited
             count += 1
